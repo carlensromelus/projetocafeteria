@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumora Café - Cafeteria</title>
+    <title>Lumora Café - Cafeteria   sei loa </title>
     <link rel="stylesheet" href="style.css/styles.css">
 </head>
 <body>
