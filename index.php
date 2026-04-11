@@ -1,11 +1,4 @@
-<?php
-session_start();
 
-if (!isset($_SESSION["logado"])) {
-    header("Location: login.php");
-    exit;
-}
-?>
 <?php
 $cardapio = [
     [
@@ -45,7 +38,6 @@ $cardapio = [
         "icone" => "🧀"
     ]
 ];
-
 $horarios = [
     "Segunda a Sexta" => "08:00 - 20:00",
     "Sábado" => "09:00 - 22:00",
