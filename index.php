@@ -1,42 +1,51 @@
 
 <?php
+session_start();
+
+// 🔒 BLOQUEIA ACESSO SE NÃO ESTIVER LOGADO
+if (!isset($_SESSION["logado"]) || $_SESSION["logado"] !== true) {
+    header("Location: login.php");
+    exit;
+}
+?>
+
+
 $cardapio = [
     [
         "nome" => "Espresso Tradicional",
         "descricao" => "Café intenso e aromático, extraído na medida certa.",
         "preco" => "R$ 7,00",
-        "icone" => "☕"
+        "icone" => "☕",
+        "imagem" => "img/1.jpg"
     ],
     [
         "nome" => "Cappuccino Cremoso",
         "descricao" => "Mistura perfeita de espresso, leite vaporizado e espuma.",
         "preco" => "R$ 12,00",
-        "icone" => "🥛"
+        "icone" => "🥛",
+        "imagem" => "img/2.jpg"
     ],
     [
         "nome" => "Mocha Especial",
-        "descricao" => "Café com chocolate, leite e um toque irresistível de chantilly.",
+        "descricao" => "Café com chocolate, leite e chantilly.",
         "preco" => "R$ 15,00",
-        "icone" => "🍫"
+        "icone" => "🍫",
+        "imagem" => "img/3.jpg"
     ],
     [
         "nome" => "Croissant Artesanal",
-        "descricao" => "Massa leve e amanteigada, ideal para acompanhar seu café.",
+        "descricao" => "Massa leve e amanteigada.",
         "preco" => "R$ 11,00",
-        "icone" => "🥐"
+        "icone" => "🥐",
+        "imagem" => "img/4.jpg"
     ],
     [
         "nome" => "Fatia de Bolo do Dia",
-        "descricao" => "Sabores variados preparados fresquinhos todos os dias.",
+        "descricao" => "Sabores variados fresquinhos.",
         "preco" => "R$ 13,00",
-        "icone" => "🍰"
+        "icone" => "🍰",
+        "imagem" => "img/5.jpg"
     ],
-    [
-        "nome" => "Pão de Queijo Gourmet",
-        "descricao" => "Casquinha crocante por fora e macio por dentro.",
-        "preco" => "R$ 9,00",
-        "icone" => "🧀"
-    ]
 ];
 $horarios = [
     "Segunda a Sexta" => "08:00 - 20:00",
@@ -141,27 +150,77 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     </section>
 
-    
-
-    <section class="cardapio" id="cardapio">
-        <div class="container">
-            <div class="secao-titulo">
-                <span>Nosso cardápio</span>
-                <h2>Favoritos da cafeteria</h2>
-            </div>
-
-            <div class="cards-produtos">
-                <?php foreach ($cardapio as $item): ?>
-                    <div class="produto">
-                        <div class="icone"><?= $item["icone"]; ?></div>
-                        <h3><?= $item["nome"]; ?></h3>
-                        <p><?= $item["descricao"]; ?></p>
-                        <span><?= $item["preco"]; ?></span>
-                    </div>
-                <?php endforeach; ?>
-            </div>
+ <section class="cardapio" id="cardapio">
+    <div class="container">
+        <div class="secao-titulo">
+            <span>Nosso cardápio</span>
+            <h2>Favoritos da cafeteria</h2>
         </div>
-    </section>
+
+        <div class="cards-produtos">
+            <?php foreach ($cardapio as $item): ?>
+                <div class="produto">
+                    <img src="<?= $item['imagem'] ?>" alt="<?= $item['nome'] ?>">
+                    <div class="icone"><?= $item["icone"]; ?></div>
+                    <h3><?= $item["nome"]; ?></h3>
+                    <p><?= $item["descricao"]; ?></p>
+                    <span><?= $item["preco"]; ?></span>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+
+<style>
+.cards-produtos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.produto {
+    width: 200px;
+    padding: 15px;
+    border-radius: 15px;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.produto img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;   /* deixa redondo */
+    object-fit: cover;    /* mantém proporção sem distorcer */
+    display: block;
+    margin: 0 auto 10px;
+    border: 2px solid #eee; /* borda leve opcional */
+    transition: transform 0.3s;
+}
+
+.produto img:hover {
+    transform: scale(1.05); /* efeito de zoom */
+}
+
+.produto h3 {
+    margin: 5px 0;
+}
+
+.produto p {
+    font-size: 14px;
+    color: #555;
+}
+
+.produto span {
+    font-weight: bold;
+    display: block;
+    margin-top: 5px;
+}
+</style>
+
+
 
     <section class="horarios">
         <div class="container">
@@ -197,7 +256,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <ul class="lista-contato">
                     <li><strong>📍 Endereço:</strong> Rua das Flores, 123 - Centro</li>
                     <li><strong>📞 Telefone:</strong> (11) 99999-9999</li>
-                    <li><strong>✉️ E-mail:</strong> contato@cafearoma.com</li>
+                    <li><strong>✉️ E-mail:</strong> contato@lumora.com</li>
                 </ul>
             </div>
 
@@ -291,7 +350,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <footer class="rodape">
         <div class="container">
-            <p>© <?php echo date("Y"); ?> Café Aroma - Todos os direitos reservados.</p>
+            <p>© <?php echo date("Y"); ?> Café Lumora - Todos os direitos reservados.</p>
         </div>
     </footer>
 
