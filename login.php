@@ -1,94 +1,250 @@
 <?php
 session_start();
-require "conexao.php";
+include("conexao.php");
 
 $erro = "";
-$email = "";
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $email = $_POST["email"] ?? "";
-    $senha = $_POST["senha"] ?? "";
+    $email = $_POST["email"] ?? '';
+    $senha = $_POST["senha"] ?? '';
 
-    $sql = "SELECT * FROM usuarios WHERE email = ?";
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
 
-    if ($stmt) {
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
+    $result = $stmt->get_result();
 
-        $res = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
 
-        if ($res->num_rows === 1) {
-            $user = $res->fetch_assoc();
+        if (password_verify($senha, $user["senha"])) {
+            $_SESSION["logado"] = true;
+            $_SESSION["usuario"] = $email;
 
-            if (password_verify($senha, $user["senha"])) {
-
-                $_SESSION["logado"] = true;
-                $_SESSION["usuario"] = $user["nome"];
-
-                header("Location: index.php");
-                exit;
-
-            } else {
-                $erro = "Senha incorreta";
-            }
-
+            // ✅ CAMINHO CORRETO
+            header("Location: admin.php");
+            exit;
         } else {
-            $erro = "Usuário não encontrado";
+            $erro = "Senha incorreta!";
         }
-
     } else {
-        $erro = "Erro na conexão com banco";
+        $erro = "Email não encontrado!";
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - Lumora Café</title>
-<link rel="stylesheet" href="login.css">
+<title>Login Cafeteria</title>
+
+<style>
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    height:100vh;
+    background:#EFEBE9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* CONTAINER */
+.login-container {
+    width:900px;
+    height:520px;
+    background:white;
+    display:flex;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 15px 40px rgba(0,0,0,0.2);
+}
+
+/* LADO IMAGEM */
+.left {
+    width:50%;
+    background:url("https://images.unsplash.com/photo-1509042239860-f550ce710b93") no-repeat center;
+    background-size:cover;
+    position:relative;
+}
+
+.left::after {
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(62,39,35,0.65);
+}
+
+.left-text {
+    position:absolute;
+    bottom:30px;
+    left:30px;
+    color:white;
+    z-index:2;
+    font-size:20px;
+    font-weight:bold;
+}
+
+/* LADO DIREITO */
+.right {
+    width:50%;
+    padding:50px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+/* TITULO */
+.right h2 {
+    color:#3E2723;
+    margin-bottom:10px;
+}
+
+.right p {
+    color:#777;
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+/* INPUTS */
+input {
+    padding:12px;
+    margin-bottom:15px;
+    border:1px solid #ddd;
+    border-radius:5px;
+    outline:none;
+    transition:0.3s;
+}
+
+input:focus {
+    border-color:#6D4C41;
+}
+
+/* LINK */
+.link {
+    font-size:12px;
+    color:#6D4C41;
+    text-align:right;
+    margin-bottom:15px;
+    cursor:pointer;
+}
+
+/* BOTÃO */
+button {
+    padding:12px;
+    background:#6D4C41;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+    width:100%;
+}
+
+button:hover {
+    background:#D7A86E;
+}
+
+.create-account {
+    margin-top: 15px;
+}
+
+.create-account button {
+    width: 100%;
+}
+
+.admin-btn {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    background: #4A3424;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    margin-top: 10px;
+    text-decoration: none;
+}
+
+.admin-btn:hover {
+    background: #6D4C41;
+}
+
+/* DIVISOR */
+.divisor {
+    text-align:center;
+    margin:20px 0;
+    color:#aaa;
+    font-size:12px;
+}
+
+/* SOCIAL */
+.social {
+    display:flex;
+    gap:10px;
+}
+
+.social button {
+    flex:1;
+    background:#EFEBE9;
+    color:#333;
+    border:1px solid #ccc;
+}
+
+.social button:hover {
+    background:#ddd;
+}
+
+/* ERRO */
+.erro {
+    color:red;
+    margin-bottom:10px;
+    font-size:13px;
+}
+</style>
+
 </head>
 
 <body>
 
 <div class="login-container">
-    <div class="login-box">
 
-        <h2>☕ Lumora Café</h2>
-        <p>Bem-vindo de volta</p>
+    <!-- IMAGEM -->
+    <div class="left">
+        <div class="left-text">
+        </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="right">
+        <h2>Bem-vindo de volta</h2>
+        <p>Faça login para acessar o painel</p>
+
+        <?php if(isset($erro)) echo "<div class='erro'>$erro</div>"; ?>
 
         <form method="POST">
-
-            <div class="campo">
-                <label>Email</label>
-                <input type="email" name="email"
-                       value="<?= htmlspecialchars($email) ?>"
-                       required>
-            </div>
-
-            <div class="campo">
-                <label>Senha</label>
-                <input type="password" name="senha" required>
-            </div>
-
-            <button type="submit" class="btn">Entrar</button>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="senha" placeholder="Senha" required>
+            <button type="submit">Entrar</button>
         </form>
 
-        <?php if (!empty($erro)): ?>
-            <p style="color:red; margin-top:10px;">
-                <?= $erro ?>
-            </p>
-        <?php endif; ?>
+        <div class="create-account">
+            <button type="button" onclick="window.location='cadastro.php'">Criar Conta</button>
+            <a href="admin.php" class="admin-btn">Acessar Admin</a>
+        </div>
 
-        <span class="extra">
-            Não tem conta? <a href="cadastro.php">Criar conta</a>
-        </span>
-
-    </div>
 </div>
 
 </body>

@@ -16,9 +16,9 @@ $cardapio = [
     ["nome" => "Mocha Especial", "descricao" => "Café com chocolate e chantilly.", "preco" => "R$ 15,00", "icone" => "", "imagem" => "img/3.jpg"],
     ["nome" => "Croissant Artesanal", "descricao" => "Massa leve e amanteigada.", "preco" => "R$ 11,00", "icone" => "", "imagem" => "img/4.jpg"],
     ["nome" => "Fatia de Bolo", "descricao" => "Sabores variados do dia.", "preco" => "R$ 13,00", "icone" => "", "imagem" => "img/5.jpg"],
-    ["nome" => "Fatia de Bolo", "descricao" => "Sabores variados do dia.", "preco" => "R$ 13,00", "icone" => "", "imagem" => "img/5.jpg"],
-    ["nome" => "Fatia de Bolo", "descricao" => "Sabores variados do dia.", "preco" => "R$ 13,00", "icone" => "", "imagem" => "img/5.jpg"],
-    ["nome" => "Fatia de Bolo", "descricao" => "Sabores variados do dia.", "preco" => "R$ 13,00", "icone" => "", "imagem" => "img/5.jpg"],
+    ["nome" => "Brownie de Chocolate", "descricao" => "Textura macia com cobertura crocante.", "preco" => "R$ 11,00", "icone" => "", "imagem" => "img/6.jpg"],
+    ["nome" => "Sanduíche Natural", "descricao" => "Pão integral com pasta leve e folhas frescas.", "preco" => "R$ 14,00", "icone" => "", "imagem" => "img/4.jpg"],
+    ["nome" => "Suco Tropical", "descricao" => "Coquetel de frutas frescas com toque cítrico.", "preco" => "R$ 9,00", "icone" => "", "imagem" => "img/5.jpg"],
 ];
 
 // 🕒 HORÁRIOS
@@ -65,9 +65,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <header class="topo">
         <div class="container navbar">
 
-            <div class="logo">
+            <a href="#inicio" class="logo">
                 ☕ Lumora Café
-            </div>
+            </a>
 
             <nav>
                 <ul class="menu">
@@ -87,10 +87,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </header>
 
     <!-- ================= BEM-VINDO ================= -->
-    <section class="welcome">
+    <section id="inicio" class="welcome">
         <div class="welcome-box">
-            <h2>Welcome to <span>Lumora Café</span> </h2>
-            <p>O melhor café da cidade, feito com amor e qualidade.</p>
+            <h2>Bem-vindo ao <span>Lumora Café</span></h2>
+            <p>Sabores especiais, ambiente acolhedor e café preparado na medida certa para o seu dia.</p>
             <a href="#cardapio" class="btn-welcome">Ver Cardápio</a>
         </div>
     </section>
@@ -116,6 +116,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     <!-- ================= SOBRE ================= -->
+    <section class="sobre" id="sobre">
+        <div class="container sobre-grid">
+            <div class="sobre-card">
+                <h3>História com sabor</h3>
+                <p>Desde a primeira xícara, nossa cafeteria serve receitas caseiras com ingredientes selecionados e um toque artesanal.</p>
+            </div>
+            <div class="sobre-card">
+                <h3>Feito para você</h3>
+                <p>Cada bebida e sobremesa é preparada para combinar calor, cremosidade e aquele aroma especial que conquista clientes.</p>
+            </div>
+            <div class="sobre-card">
+                <h3>Ambiente acolhedor</h3>
+                <p>Um espaço confortável para trabalhar, conversar ou relaxar enquanto aproveita nosso cardápio de sabores brasileiros.</p>
+            </div>
+        </div>
+    </section>
 
 
     <!-- ================= CARDÁPIO ================= -->
@@ -135,29 +151,55 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </section>
 
     <!-- ================= HORÁRIOS ================= -->
-    <section>
-        <h2>🕒 Horários</h2>
+    <section class="horarios">
+        <div class="container horarios-box">
+            <h2>🕒 Horários</h2>
 
-        <?php foreach ($horarios as $dia => $hora): ?>
-            <p><b><?= $dia ?>:</b> <?= $hora ?></p>
-        <?php endforeach; ?>
+            <?php foreach ($horarios as $dia => $hora): ?>
+                <div class="linha-horario">
+                    <strong><?= $dia ?>:</strong>
+                    <span><?= $hora ?></span>
+                </div>
+            <?php endforeach; ?>
+        </div>
     </section>
 
     <!-- ================= CONTATO ================= -->
-    <section id="contato">
-        <h2>📩 Contato</h2>
+    <section id="contato" class="contato">
+        <div class="container contato-grid">
+            <div class="contato-info">
+                <h2>📩 Contato</h2>
+                <p>Fale conosco para fazer seu pedido ou tirar dúvidas. Estamos prontos para atender você!</p>
 
-        <?php if ($mensagem): ?>
-            <p><?= $mensagem ?></p>
-        <?php endif; ?>
+                <ul class="lista-contato">
+                    <li><strong>Endereço:</strong> Rua do Café, 123</li>
+                    <li><strong>Telefone:</strong> (11) 2345-6789</li>
+                    <li><strong>Email:</strong> contato@lumoracafe.com</li>
+                </ul>
 
-        <form method="POST">
-            <input name="nome" placeholder="Nome">
-            <input name="email" placeholder="Email">
-            <input name="assunto" placeholder="Assunto">
-            <textarea name="mensagem" placeholder="Mensagem"></textarea>
-            <button>Enviar</button>
-        </form>
+                <?php if ($mensagem): ?>
+                    <div class="alerta"><?= $mensagem ?></div>
+                <?php endif; ?>
+            </div>
+
+            <div class="form-box">
+                <form method="POST">
+                    <div class="campo">
+                        <input name="nome" placeholder="Nome" required>
+                    </div>
+                    <div class="campo">
+                        <input name="email" placeholder="Email" type="email" required>
+                    </div>
+                    <div class="campo">
+                        <input name="assunto" placeholder="Assunto" required>
+                    </div>
+                    <div class="campo">
+                        <textarea name="mensagem" placeholder="Mensagem" rows="6" required></textarea>
+                    </div>
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+        </div>
     </section>
 
     <!-- ================= DEPOIMENTOS ================= -->

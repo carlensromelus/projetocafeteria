@@ -169,6 +169,7 @@ body {
     color: var(--marrom-escuro);
     font-size: 1.4rem;
     font-weight: bold;
+    text-decoration: none;
 }
 
 .logo img {
@@ -483,21 +484,7 @@ section {
     font-weight: bold;
 }
 
-#cardapio .card::before {
-    content: "Destaque";
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    background: rgba(255, 215, 140, 0.95);
-    color: #3E2618;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 8px 12px;
-    border-radius: 999px;
-    box-shadow: 0 6px 18px rgba(62, 38, 24, 0.12);
-}
+
 
 @media (max-width: 992px) {
     #cardapio .grid {
