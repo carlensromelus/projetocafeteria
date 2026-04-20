@@ -12,11 +12,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $email = trim($_POST["email"] ?? "");
     $senha = $_POST["senha"] ?? "";
+    $role = "user";
 
-    if ($email && $senha) {
+    if ($email && $senha && $role) {
 
         $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-
+     
+      
         // 🔍 verifica se email já existe
         $check = $conn->prepare("SELECT id FROM usuarios WHERE email=?");
         $check->bind_param("s", $email);
@@ -31,11 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             // 📝 insere no banco
             $stmt = $conn->prepare(
-                "INSERT INTO usuarios (email, senha) VALUES (?, ?)"
+                "INSERT INTO usuarios (email, senha, role) VALUES (?, ?, ?)"
             );
 
             if ($stmt) {
-                $stmt->bind_param("ss", $email, $senhaHash);
+                $stmt->bind_param("sss", $email, $senhaHash, $role);
 
                 if ($stmt->execute()) {
 

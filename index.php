@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+require "conexao.php";
 // 🔒 proteção de login
 if (!isset($_SESSION["logado"])) {
     header("Location: login.php");
@@ -10,16 +11,22 @@ if (!isset($_SESSION["logado"])) {
 $usuario = $_SESSION["usuario"];
 
 // 🍽️ CARDÁPIO
-$cardapio = [
-    ["nome" => "Espresso Tradicional", "descricao" => "Café intenso e aromático.", "preco" => "R$ 7,00", "icone" => "", "imagem" => "img/1.jpg"],
-    ["nome" => "Cappuccino Cremoso", "descricao" => "Espresso + leite + espuma.", "preco" => "R$ 12,00", "icone" => "", "imagem" => "img/2.jpg"],
-    ["nome" => "Mocha Especial", "descricao" => "Café com chocolate e chantilly.", "preco" => "R$ 15,00", "icone" => "", "imagem" => "img/3.jpg"],
-    ["nome" => "Croissant Artesanal", "descricao" => "Massa leve e amanteigada.", "preco" => "R$ 11,00", "icone" => "", "imagem" => "img/4.jpg"],
-    ["nome" => "Fatia de Bolo", "descricao" => "Sabores variados do dia.", "preco" => "R$ 13,00", "icone" => "", "imagem" => "img/5.jpg"],
-    ["nome" => "Brownie de Chocolate", "descricao" => "Textura macia com cobertura crocante.", "preco" => "R$ 11,00", "icone" => "", "imagem" => "img/6.jpg"],
-    ["nome" => "Sanduíche Natural", "descricao" => "Pão integral com pasta leve e folhas frescas.", "preco" => "R$ 14,00", "icone" => "", "imagem" => "img/4.jpg"],
-    ["nome" => "Suco Tropical", "descricao" => "Coquetel de frutas frescas com toque cítrico.", "preco" => "R$ 9,00", "icone" => "", "imagem" => "img/5.jpg"],
-];
+// $cardapio = [
+//     ["nome" => "Espresso Tradicional", "descricao" => "Café intenso e aromático.", "preco" => "R$ 7,00", "icone" => "", "imagem" => "img/1.jpg"],
+//     ["nome" => "Cappuccino Cremoso", "descricao" => "Espresso + leite + espuma.", "preco" => "R$ 12,00", "icone" => "", "imagem" => "img/2.jpg"],
+//     ["nome" => "Mocha Especial", "descricao" => "Café com chocolate e chantilly.", "preco" => "R$ 15,00", "icone" => "", "imagem" => "img/3.jpg"],
+//     ["nome" => "Croissant Artesanal", "descricao" => "Massa leve e amanteigada.", "preco" => "R$ 11,00", "icone" => "", "imagem" => "img/4.jpg"],
+//     ["nome" => "Fatia de Bolo", "descricao" => "Sabores variados do dia.", "preco" => "R$ 13,00", "icone" => "", "imagem" => "img/5.jpg"],
+//     ["nome" => "Brownie de Chocolate", "descricao" => "Textura macia com cobertura crocante.", "preco" => "R$ 11,00", "icone" => "", "imagem" => "img/6.jpg"],
+//     ["nome" => "Sanduíche Natural", "descricao" => "Pão integral com pasta leve e folhas frescas.", "preco" => "R$ 14,00", "icone" => "", "imagem" => "img/4.jpg"],
+//     ["nome" => "Suco Tropical", "descricao" => "Coquetel de frutas frescas com toque cítrico.", "preco" => "R$ 9,00", "icone" => "", "imagem" => "img/5.jpg"],
+// ];
+
+$sql = "SELECT * FROM produtos";
+$stmt = $conn->query($sql);
+$cardapio = $stmt->fetch_all(MYSQLI_ASSOC);
+
+
 
 // 🕒 HORÁRIOS
 $horarios = [
@@ -77,6 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <li><a href="#contato">Contato</a></li>
                 </ul>
             </nav>
+      
 
             <div>
                 👤 <?= htmlspecialchars($usuario) ?>
@@ -141,6 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="grid">
             <?php foreach ($cardapio as $item): ?>
                 <div class="card">
+                
                     <img class="img-cafe" src="<?= $item['imagem'] ?>">
                     <h3><?= $item['icone'] ?> <?= $item['nome'] ?></h3>
                     <p><?= $item['descricao'] ?></p>

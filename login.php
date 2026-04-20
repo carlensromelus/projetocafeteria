@@ -9,6 +9,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"] ?? '';
     $senha = $_POST["senha"] ?? '';
 
+
+
     $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -22,8 +24,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["logado"] = true;
             $_SESSION["usuario"] = $email;
 
+            if($user["role"] === "admin") {
+                header("Location: admin.php");
+                exit;
+            }
+
             // ✅ CAMINHO CORRETO
-            header("Location: admin.php");
+            header("Location: index.php");
             exit;
         } else {
             $erro = "Senha incorreta!";
@@ -242,7 +249,7 @@ button:hover {
 
         <div class="create-account">
             <button type="button" onclick="window.location='cadastro.php'">Criar Conta</button>
-            <a href="admin.php" class="admin-btn">Acessar Admin</a>
+            <!-- <a href="admin.php" class="admin-btn">Acessar Admin</a> -->
         </div>
 
 </div>

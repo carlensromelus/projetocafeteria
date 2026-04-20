@@ -14,9 +14,11 @@ if (isset($_POST["cadastrar"])) {
     $nome = $_POST["nome"];
     $descricao = $_POST["descricao"];
     $preco = $_POST["preco"];
+    $imagem = $_POST["imagem"];
+    $concact = "img/".$imagem;
 
-    $stmt = $conn->prepare("INSERT INTO produtos (nome, descricao, preco) VALUES (?, ?, ?)");
-    $stmt->bind_param("ssd", $nome, $descricao, $preco);
+    $stmt = $conn->prepare("INSERT INTO produtos (nome, descricao, preco,imagem) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssds", $nome, $descricao, $preco,$concact);
     $stmt->execute();
 }
 
@@ -152,6 +154,7 @@ button:hover {
             <input type="text" name="nome" placeholder="Nome">
             <textarea name="descricao" placeholder="Descrição"></textarea>
             <input type="text" name="preco" placeholder="Preço">
+            <input type="file" name="imagem" placeholder="Imagem">
             <button name="cadastrar">Cadastrar</button>
         </form>
     </div>
