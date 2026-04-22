@@ -1,29 +1,52 @@
 <?php
-require 'vendor/autoload.php'; // Certifique-se de incluir o autoloader do PHPMailer
+require 'vendor/autoload.php';
+include("conexao.php");
+
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;// Recuperar dados do formulário
+use PHPMailer\PHPMailer\Exception;
+
 $txtNome = $_POST["txtNome"];
 $txtAssunto = $_POST["txtAssunto"];
 $txtEmail = $_POST["txtEmail"];
-$txtMensagem = $_POST["txtMensagem"];// Configurar o PHPMailer
+$txtMensagem = $_POST["txtMensagem"];
+
+// 🔥 SALVAR NO BANCO
+$sql = "INSERT INTO mensagens (nome, email, assunto, mensagem)
+        VALUES ('$txtNome', '$txtEmail', '$txtAssunto', '$txtMensagem')";
+
+$conn->query($sql);
+
+// 📧 ENVIAR EMAIL
 $mail = new PHPMailer(true);
+
 try {
-// Configurações do servidor SMTP
-$mail->isSMTP();
-$mail->Host = 'smtp.gmail.com';
-$mail->SMTPAuth = true;
-$mail->Username = 'seu-email@gmail.com'; // Seu endereço de e-mail do Gmail
-$mail->Password = 'sua-senha-de-aplicativo'; // Senha de aplicativo gerada
-$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-$mail->Port = 587;// Configurações do e-mail
-$mail->setFrom('seu-email@gmail.com', $txtNome);
-$mail->addAddress($txtEmail);
-$mail->Subject = $txtAssunto;
-$mail->Body = $txtMensagem;
-$mail->isHTML(true);// Enviar o e-mail
-$mail->send();
-echo 'E-mail enviado com sucesso!';
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'seu-email@gmail.com';
+    $mail->Password = 'zvwj hvxg wnlp omwb';
+    $mail->SMTPSecure = 'tls';
+    $mail->Port = 587;
+
+    $mail->setFrom('seu-email@gmail.com', 'Cafeteria');
+    $mail->addAddress('seu-email@gmail.com');
+    $mail->addReplyTo($txtEmail, $txtNome);
+
+    $mail->isHTML(true);
+    $mail->Subject = $txtAssunto;
+    $mail->Body = "
+        <h2>Nova mensagem ☕</h2>
+        <p><b>Nome:</b> $txtNome</p>
+        <p><b>Email:</b> $txtEmail</p>
+        <p><b>Mensagem:</b><br>$txtMensagem</p>
+    ";
+
+    $mail->send();
+
+    header("Location: sucesso.html");
+    exit;
+
 } catch (Exception $e) {
-echo "Erro ao enviar o e-mail: {$mail->ErrorInfo}";
+    echo "Erro: {$mail->ErrorInfo}";
 }
 ?>
